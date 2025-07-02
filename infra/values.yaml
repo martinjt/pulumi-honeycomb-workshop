@@ -1,0 +1,32 @@
+# OpenTelemetry Demo Helm Chart Values
+# Configuration for sending telemetry data to Honeycomb only
+
+# Disable observability backends - Honeycomb only
+jaeger:
+  enabled: false
+
+grafana:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+opensearch:
+  enabled: false
+
+opentelemetry-collector:
+  config:
+    exporters:
+      otlp/honeycomb:
+        endpoint: https://api.honeycomb.io:443
+        headers:
+          x-honeycomb-team: ${env:HONEYCOMB_API_KEY}
+
+    service:
+      pipelines:
+        traces:
+          exporters: [otlp/honeycomb, spanmetrics]
+        metrics:
+          exporters: [otlp/honeycomb]
+        logs:
+          exporters: [otlp/honeycomb]

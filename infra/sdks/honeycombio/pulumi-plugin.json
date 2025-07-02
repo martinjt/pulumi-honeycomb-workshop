@@ -1,0 +1,10 @@
+{
+  "resource": true,
+  "name": "terraform-provider",
+  "version": "0.12.0",
+  "parameterization": {
+    "name": "honeycombio",
+    "version": "0.36.1",
+    "value": "eyJyZW1vdGUiOnsidXJsIjoicmVnaXN0cnkub3BlbnRvZnUub3JnL2hvbmV5Y29tYmlvL2hvbmV5Y29tYmlvIiwidmVyc2lvbiI6IjAuMzYuMSJ9fQ=="
+  }
+}
