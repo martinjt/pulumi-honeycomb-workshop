@@ -50,7 +50,6 @@ return await Deployment.RunAsync(static () =>
         }
     });
 
-    // Deploy the OpenTelemetry Demo using Helm
     var otelDemo = new Release("opentelemetry-demo", new ReleaseArgs
     {
         Chart = "opentelemetry-demo",
