@@ -1,0 +1,13 @@
+name: monitoring
+description: A monitoring stack for a specific Honeycomb environment
+runtime: dotnet
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: csharp
+packages:
+  honeycombio:
+    source: terraform-provider
+    version: 0.12.0
+    parameters:
+      - honeycombio/honeycombio
