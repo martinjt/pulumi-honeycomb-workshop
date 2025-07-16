@@ -136,23 +136,41 @@ return await Deployment.RunAsync(() =>
         })
     });
 
-    // Create a board to visualize root span duration
-    var durationBoard = new Board("root-span-duration-board", new BoardArgs
+    // Create a query annotation for the board query
+    var rootSpanAnnotation = new QueryAnnotation("root-span-annotation", new QueryAnnotationArgs
+    {
+        Name = "Root Span Duration Analysis",
+        Description = "This query shows the maximum, average, and 95th percentile duration of root spans over time. Root spans are identified by the absence of a trace.parent_id field, indicating they are the entry points to distributed traces.",
+        Dataset = "__all__",
+        QueryId = rootSpanDurationBoardQuery.Id
+    });
+
+    // Create a flexible board to visualize root span duration
+    var durationBoard = new FlexibleBoard("root-span-duration-flexible-board", new FlexibleBoardArgs
     {
         Name = "Root Span Duration Dashboard",
         Description = "Dashboard showing duration metrics for root spans",
-        Queries = new[]
+        Panels = new[]
         {
-            new Pulumi.Honeycombio.Inputs.BoardQueryArgs
+            new Pulumi.Honeycombio.Inputs.FlexibleBoardPanelArgs
             {
-                Caption = "Root Span Duration Over Time",
-                QueryId = rootSpanDurationBoardQuery.Id,
-                GraphSettings = new[]
+                Type = "query",
+                QueryPanels = new[]
                 {
-                    new Pulumi.Honeycombio.Inputs.BoardQueryGraphSettingArgs
+                    new Pulumi.Honeycombio.Inputs.FlexibleBoardPanelQueryPanelArgs
                     {
-                        OverlaidCharts = false,
-                        StackedGraphs = false
+                        QueryId = rootSpanDurationBoardQuery.Id,
+                        QueryAnnotationId = rootSpanAnnotation.Id,
+                        QueryStyle = "graph",
+                        VisualizationSettings = new[]
+                        {
+                            new Pulumi.Honeycombio.Inputs.FlexibleBoardPanelQueryPanelVisualizationSettingArgs
+                            {
+                                UseUtcXaxis = true,
+                                HideMarkers = false,
+                                PreferOverlaidCharts = false
+                            }
+                        }
                     }
                 }
             }
@@ -166,6 +184,8 @@ return await Deployment.RunAsync(() =>
         ["triggerDescription"] = durationTrigger.Description,
         ["datasetName"] = dummyDataset.Name,
         ["boardName"] = durationBoard.Name,
-        ["queryId"] = rootSpanDurationBoardQuery.Id
+        ["queryId"] = rootSpanDurationBoardQuery.Id,
+        ["annotationName"] = rootSpanAnnotation.Name,
+        ["annotationId"] = rootSpanAnnotation.Id
     };
 });
